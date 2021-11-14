@@ -90,6 +90,6 @@ variable "ami_id" {
 }
 
 variable "wg_server_interface" {
-  default     = "eth0"
+  default     = "wg0"
   description = "The default interface to forward network traffic to."
 }
