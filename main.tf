@@ -19,7 +19,6 @@ data "template_file" "wg_client_data_json" {
     client_pub_key       = element(values(var.wg_client_public_keys[count.index]), 0)
     client_ip            = element(keys(var.wg_client_public_keys[count.index]), 0)
     persistent_keepalive = var.wg_persistent_keepalive
-    wg_server_net        = var.wg_server_net
   }
 }
 
@@ -28,7 +27,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-*-16.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-*-20.04-arm64-server-*"]
   }
   filter {
     name   = "virtualization-type"
