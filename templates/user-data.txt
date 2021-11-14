@@ -3,9 +3,11 @@ apt-get update -y
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -o Dpkg::Options::="--force-confnew"
 apt-get install -y wireguard-dkms wireguard-tools awscli
 
+PRIVATE_IP=$(ec2metadata --local-ipv4)
+
 cat > /etc/wireguard/wg0.conf <<- EOF
 [Interface]
-Address = ${wg_server_net}
+Address = $PRIVATE_IP
 PrivateKey = ${wg_server_private_key}
 ListenPort = ${wg_server_port}
 PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o ${wg_server_interface} -j MASQUERADE
@@ -19,6 +21,7 @@ if [ "${use_eip}" != "disabled" ]; then
   export INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
   export REGION=$(curl -fsq http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')
   aws --region $${REGION} ec2 associate-address --allocation-id ${eip_id} --instance-id $${INSTANCE_ID}
+  aws --region $${REGION} ec2 modify-instance-attribute --no-source-dest-check --instance-id $${INSTANCE_ID}
 fi
 
 chown -R root:root /etc/wireguard/

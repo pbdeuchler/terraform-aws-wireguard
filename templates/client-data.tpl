@@ -1,4 +1,4 @@
 [Peer]
 PublicKey = ${client_pub_key}
-AllowedIPs = ${client_ip}
+AllowedIPs = ${wg_server_net}
 PersistentKeepalive = ${persistent_keepalive}
