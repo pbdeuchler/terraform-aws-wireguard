@@ -3,7 +3,6 @@ data "template_file" "user_data" {
 
   vars = {
     wg_server_private_key = data.aws_ssm_parameter.wg_server_private_key.value
-    wg_server_net         = var.wg_server_net
     wg_server_port        = var.wg_server_port
     peers                 = join("\n", data.template_file.wg_client_data_json.*.rendered)
     use_eip               = var.use_eip ? "enabled" : "disabled"
@@ -20,6 +19,7 @@ data "template_file" "wg_client_data_json" {
     client_pub_key       = element(values(var.wg_client_public_keys[count.index]), 0)
     client_ip            = element(keys(var.wg_client_public_keys[count.index]), 0)
     persistent_keepalive = var.wg_persistent_keepalive
+    wg_server_net        = var.wg_server_net
   }
 }
 
