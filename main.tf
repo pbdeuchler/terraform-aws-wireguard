@@ -23,11 +23,13 @@ locals {
 }
 
 resource "aws_launch_template" "wireguard_launch_config" {
-  name_prefix          = "wireguard-${var.env}-"
-  image_id             = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
-  instance_type        = var.instance_type
-  key_name             = var.ssh_key_id
-  iam_instance_profile = (var.use_eip ? { arn = aws_iam_instance_profile.wireguard_profile[0].arn } : {})
+  name_prefix   = "wireguard-${var.env}-"
+  image_id      = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
+  instance_type = var.instance_type
+  key_name      = var.ssh_key_id
+  iam_instance_profile = {
+    arn = (var.use_eip ? aws_iam_instance_profile.wireguard_profile[0].arn : null)
+  }
 
   user_data = templatefile("${path.module}/templates/user-data.txt", {
     wg_server_private_key = data.aws_ssm_parameter.wg_server_private_key.value
