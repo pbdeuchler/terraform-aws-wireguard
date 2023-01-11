@@ -27,7 +27,7 @@ resource "aws_launch_template" "wireguard_launch_config" {
   image_id      = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
   instance_type = var.instance_type
   key_name      = var.ssh_key_id
-  iam_instance_profile = {
+  iam_instance_profile {
     arn = (var.use_eip ? aws_iam_instance_profile.wireguard_profile[0].arn : null)
   }
 
