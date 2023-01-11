@@ -41,10 +41,9 @@ resource "aws_launch_template" "wireguard_launch_config" {
     wg_persistent_keepalive = var.wg_persistent_keepalive
   }))
 
-  vpc_security_group_ids = local.security_groups_ids
-
   network_interfaces {
     associate_public_ip_address = true
+    security_groups             = local.security_groups_ids
   }
 }
 
@@ -67,7 +66,7 @@ resource "aws_autoscaling_group" "wireguard_asg" {
     create_before_destroy = true
   }
 
-  tags = [
+  tag = [
     {
       key                 = "Name"
       value               = aws_launch_template.wireguard_launch_config.name
