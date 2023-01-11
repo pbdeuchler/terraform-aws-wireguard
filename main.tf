@@ -31,7 +31,7 @@ resource "aws_launch_template" "wireguard_launch_config" {
     arn = (var.use_eip ? aws_iam_instance_profile.wireguard_profile[0].arn : null)
   }
 
-  user_data = templatefile("${path.module}/templates/user-data.txt", {
+  user_data = base64encode(templatefile("${path.module}/templates/user-data.txt", {
     wg_server_private_key   = data.aws_ssm_parameter.wg_server_private_key.value
     wg_server_port          = var.wg_server_port
     peer_keys               = var.wg_client_public_keys
@@ -39,7 +39,7 @@ resource "aws_launch_template" "wireguard_launch_config" {
     eip_id                  = var.eip_id
     wg_server_interface     = var.wg_server_interface
     wg_persistent_keepalive = var.wg_persistent_keepalive
-  })
+  }))
 
   vpc_security_group_ids = local.security_groups_ids
 
