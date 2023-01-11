@@ -45,6 +45,17 @@ resource "aws_launch_template" "wireguard_launch_config" {
     associate_public_ip_address = true
     security_groups             = local.security_groups_ids
   }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      name       = aws_launch_template.wireguard_launch_config.name
+      project    = "wireguard"
+      env        = var.env
+      tf-managed = "True"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "wireguard_asg" {
@@ -64,16 +75,5 @@ resource "aws_autoscaling_group" "wireguard_asg" {
 
   lifecycle {
     create_before_destroy = true
-  }
-
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = {
-      name       = aws_launch_template.wireguard_launch_config.name
-      project    = "wireguard"
-      env        = var.env
-      tf-managed = "True"
-    }
   }
 }
