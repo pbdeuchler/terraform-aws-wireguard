@@ -33,8 +33,8 @@ PostDown = ip6tables -t nat -D POSTROUTING -o ${wg_server_interface} -j MASQUERA
 
 %{ for ip, key in peer_keys ~}
 [Peer]
-PublicKey = ${ip}
-AllowedIPs = ${key}
+PublicKey = ${key}
+AllowedIPs = ${ip}
 PersistentKeepalive = ${wg_persistent_keepalive}
 %{ endfor ~}
 EOF

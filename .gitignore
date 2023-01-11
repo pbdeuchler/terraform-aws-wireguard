@@ -4,6 +4,9 @@ terraform.tfstate
 terraform.tfstate.backup
 terraform.tfstate.*.backup
 
+*-privatekey
+*-publickey
+
 # IDEs
 .idea/
 .vscode/
