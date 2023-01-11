@@ -22,8 +22,12 @@ locals {
   security_groups_ids = compact(concat(var.additional_security_group_ids, local.sg_wireguard_external))
 }
 
+locals {
+  launch_name_prefix = "wireguard-${var.env}-"
+}
+
 resource "aws_launch_template" "wireguard_launch_config" {
-  name_prefix   = "wireguard-${var.env}-"
+  name_prefix   = local.launch_name_prefix
   image_id      = var.ami_id == null ? data.aws_ami.ubuntu.id : var.ami_id
   instance_type = var.instance_type
   key_name      = var.ssh_key_id
@@ -50,10 +54,10 @@ resource "aws_launch_template" "wireguard_launch_config" {
     resource_type = "instance"
 
     tags = {
-      name       = aws_launch_template.wireguard_launch_config.name
-      project    = "wireguard"
-      env        = var.env
-      tf-managed = "True"
+      launch-template-name = local.launch_name_prefix
+      project              = "wireguard"
+      env                  = var.env
+      tf-managed           = "True"
     }
   }
 }
