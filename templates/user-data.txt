@@ -31,11 +31,11 @@ PostDown = iptables -t nat -D POSTROUTING -o ${wg_server_interface} -j MASQUERAD
 PostDown = ip6tables -D FORWARD -i wg0 -j ACCEPT
 PostDown = ip6tables -t nat -D POSTROUTING -o ${wg_server_interface} -j MASQUERADE
 
-%{ for key in peer_keys ~}
+%{ for ip, key in peer_keys ~}
 [Peer]
-PublicKey = ${key.client_pub_key}
-AllowedIPs = ${key.client_ip}
-PersistentKeepalive = ${key.persistent_keepalive}
+PublicKey = ${ip}
+AllowedIPs = ${key}
+PersistentKeepalive = ${wg_persistent_keepalive}
 %{ endfor ~}
 EOF
 
